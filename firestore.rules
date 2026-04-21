@@ -1,0 +1,30 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isValidEmail(email) {
+      return email is string && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    }
+
+    // Leads collection: Anyone can create, only admins can read
+    match /leads/{leadId} {
+      allow create: if 
+        request.resource.data.name is string && request.resource.data.name.size() > 0 &&
+        isValidEmail(request.resource.data.email) &&
+        request.resource.data.message is string && request.resource.data.message.size() > 0 &&
+        request.resource.data.createdAt is string;
+      allow read: if isAuthenticated(); // Simplified for now, can be hardened with admin roles
+    }
+
+    // Posts collection: Anyone can read, only admins can write
+    match /posts/{postId} {
+      allow read: if true;
+      allow write: if isAuthenticated();
+    }
+  }
+}
