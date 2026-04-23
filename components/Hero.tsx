@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, AnimatePresence } from 'motion/react';
-import { MessageCircle, ArrowRight, Menu, X } from 'lucide-react';
+import { MessageCircle, ArrowRight, Menu, X, Check } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { siteConfig } from '@/lib/site-config';
 
@@ -174,12 +174,43 @@ export default function Hero() {
                   transition: { duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.1 } 
                 }
               }}
-              className="text-[15px] sm:text-[17px] md:text-[19px] lg:text-[21px] text-slate-300 font-light max-w-2xl mx-auto leading-relaxed text-balance tracking-tight opacity-80"
+              className="text-[15px] sm:text-[17px] md:text-[19px] lg:text-[21px] text-slate-300 font-light max-w-2xl mx-auto leading-relaxed text-balance tracking-tight opacity-90"
             >
               Contabilidade de alta performance para empresas que <br className="hidden md:block" /> 
               não aceitam nada menos que a excelência estratégica.
             </motion.p>
           </div>
+
+          <motion.div
+            variants={{
+              hidden: { opacity: 0, y: 20 },
+              visible: { 
+                opacity: 1, 
+                y: 0,
+                transition: { duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.2 } 
+              }
+            }}
+            className="space-y-6"
+          >
+            <div className="text-white/90 text-lg md:text-2xl font-light">
+              Honorários Mensais a partir de <span className="font-bold text-secondary">R$ 250,00</span>
+            </div>
+            
+            <div className="flex flex-wrap justify-center gap-4 md:gap-8 text-[12px] md:text-[13px] text-white/60 font-medium tracking-widest uppercase">
+              {['Humanizado', 'Ágil', 'Sem Burocracia'].map((item) => (
+                <div key={item} className="flex items-center gap-2">
+                  <div className="w-5 h-5 rounded-full bg-secondary/10 border border-secondary/20 flex items-center justify-center">
+                    <Check className="w-3 h-3 text-secondary" />
+                  </div>
+                  <span>{item}</span>
+                </div>
+              ))}
+            </div>
+
+            <p className="text-slate-400 text-sm md:text-base font-light italic max-w-xl mx-auto opacity-70">
+              Ideal para quem quer crescer com segurança e organização desde o início
+            </p>
+          </motion.div>
 
           <motion.div
             variants={{
