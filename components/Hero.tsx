@@ -68,14 +68,13 @@ export default function Hero() {
 
           <div className="flex items-center gap-2 md:gap-4">
             <a 
-              href="/portal-cliente" 
-              target="_blank"
-              className={`flex items-center gap-2 rounded-full font-bold uppercase tracking-widest text-white bg-secondary hover:bg-white hover:text-primary transition-all duration-500 shadow-glow ${
-                scrolled ? 'px-4 md:px-6 py-2 text-[10px] md:text-[11px]' : 'px-6 md:px-8 py-2.5 md:py-3 text-[11px] md:text-[13px]'
-              }`}
-            >
-              <span className="hidden lg:inline">Acesso ao</span> Portal <span className="hidden sm:inline">do Cliente</span>
-            </a>
+  href="https://painelpro1.vercel.app/" 
+  target="_blank" 
+  rel="noopener noreferrer"
+  className="flex items-center gap-2 rounded-full font-bold uppercase tracking-widest px-4 md:px-6 py-2 text-[10px] md:text-[11px]"
+>
+  <span className="hidden lg:inline">Acesso ao</span> Portal
+</a>
 
             <button 
               className="lg:hidden text-white p-2"
