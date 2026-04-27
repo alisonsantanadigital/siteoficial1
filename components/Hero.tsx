@@ -29,14 +29,14 @@ export default function Hero() {
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-        className={`fixed top-0 left-0 w-full z-50 px-4 transition-all duration-700 ${scrolled ? 'py-3' : 'py-8'}`}
+        className={`fixed top-0 left-0 w-full z-50 px-4 md:px-0 transition-all duration-700 ${scrolled ? 'py-3' : 'py-6 md:py-8'}`}
       >
         <motion.div 
           layout
           className={`mx-auto flex items-center justify-between transition-all duration-700 ${
             scrolled 
-              ? 'max-w-6xl px-8 py-3 glass-dark rounded-full shadow-2xl scale-95' 
-              : 'max-w-7xl px-6 md:px-10 py-4 rounded-full bg-transparent'
+              ? 'max-w-6xl px-6 md:px-8 py-3 glass-dark rounded-full shadow-2xl scale-95' 
+              : 'max-w-7xl px-4 md:px-10 py-3 md:py-4 rounded-full bg-transparent'
           } ${isMobileMenuOpen ? 'glass-dark rounded-[2rem]' : ''}`}
         >
           <motion.a 
@@ -48,7 +48,7 @@ export default function Hero() {
               src="/logo-oficial.png?v=2" 
               alt="OFFICIA ROCHA ASSESSORIA" 
               className={`w-auto object-contain mix-blend-screen filter brightness-0 invert transition-all duration-700 ${
-                scrolled ? 'h-12 md:h-16' : 'h-32 md:h-48'
+                scrolled ? 'h-10 md:h-16' : 'h-20 md:h-48'
               }`} 
             />
           </motion.a>
@@ -68,13 +68,14 @@ export default function Hero() {
 
           <div className="flex items-center gap-2 md:gap-4">
             <a 
-  href="https://painelpro1.vercel.app/" 
-  target="_blank" 
-  rel="noopener noreferrer"
-  className="flex items-center gap-2 rounded-full font-bold uppercase tracking-widest px-4 md:px-6 py-2 text-[10px] md:text-[11px]"
->
-  <span className="hidden lg:inline">Acesso ao</span> Portal
-</a>
+              href="https://painelpro1.vercel.app/" 
+              target="_blank"
+              className={`flex items-center gap-2 rounded-full font-bold uppercase tracking-widest text-white bg-secondary hover:bg-white hover:text-primary transition-all duration-500 shadow-glow ${
+                scrolled ? 'px-4 md:px-6 py-2 text-[10px] md:text-[11px]' : 'px-6 md:px-8 py-2.5 md:py-3 text-[11px] md:text-[13px]'
+              }`}
+            >
+              <span className="hidden lg:inline">Acesso ao</span> Portal <span className="hidden sm:inline">do Cliente</span>
+            </a>
 
             <button 
               className="lg:hidden text-white p-2"
@@ -85,27 +86,43 @@ export default function Hero() {
           </div>
         </motion.div>
 
-        {/* Mobile Menu Overlay */}
         <AnimatePresence>
           {isMobileMenuOpen && (
             <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              className="absolute top-full left-4 right-4 mt-4 glass-dark rounded-[2.5rem] p-10 lg:hidden z-50 border border-white/10 shadow-2xl"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="fixed inset-0 z-[40] glass-dark flex flex-col items-center justify-center lg:hidden"
             >
-              <nav className="flex flex-col gap-8 text-center">
-                {navLinks.map((link) => (
-                  <a 
+              <nav className="flex flex-col gap-10 text-center">
+                {navLinks.map((link, idx) => (
+                  <motion.a 
                     key={link.name} 
                     href={link.href} 
-                    className="text-white/70 text-xl font-light hover:text-white transition-colors"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: idx * 0.1 }}
+                    className="text-white/80 text-3xl font-light hover:text-white transition-colors tracking-tight"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {link.name}
-                  </a>
+                  </motion.a>
                 ))}
               </nav>
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5 }}
+                className="mt-16"
+              >
+                <a 
+                  href="https://painelpro1.vercel.app/" 
+                  target="_blank"
+                  className="px-10 py-5 bg-secondary text-white rounded-full font-bold uppercase tracking-widest text-[13px] shadow-glow"
+                >
+                  Portal do Cliente
+                </a>
+              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -122,9 +139,9 @@ export default function Hero() {
       </div>
 
       {/* Content */}
-      <div className="relative z-20 text-center px-4 max-w-5xl mx-auto pt-20">
+      <div className="relative z-20 text-center px-6 max-w-5xl mx-auto pt-32 md:pt-20">
         <motion.div 
-          className="space-y-10"
+          className="space-y-8 md:space-y-10"
           initial="hidden"
           animate="visible"
           variants={{
@@ -140,7 +157,7 @@ export default function Hero() {
               hidden: { opacity: 0, y: 20 },
               visible: { opacity: 1, y: 0, transition: { duration: 0.8 } }
             }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-white/60 text-[13px] font-medium tracking-wide mb-4"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 text-white/60 text-[11px] md:text-[13px] font-medium tracking-wide mb-2 md:mb-4"
           >
             <span className="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse" />
             Especialistas em Gestão de Alta Performance
@@ -156,9 +173,9 @@ export default function Hero() {
                   transition: { duration: 1.2, ease: [0.16, 1, 0.3, 1] } 
                 }
               }}
-              className="text-[28px] sm:text-[40px] md:text-[56px] lg:text-[64px] xl:text-[72px] font-light text-white tracking-[-0.04em] leading-[1.1] text-balance text-shadow-premium"
+              className="text-[32px] sm:text-[40px] md:text-[56px] lg:text-[64px] xl:text-[72px] font-light text-white tracking-[-0.04em] leading-[1.15] md:leading-[1.1] text-balance text-shadow-premium"
             >
-              Gestão inteligente que <br />
+              Gestão inteligente que <br className="hidden sm:block" />
               <span className="font-semibold text-transparent bg-clip-text bg-gradient-to-r from-white via-secondary to-white bg-[length:200%_auto] animate-shimmer drop-shadow-sm">fortalece o seu negócio</span>
             </motion.h1>
           </div>
@@ -173,7 +190,7 @@ export default function Hero() {
                   transition: { duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.1 } 
                 }
               }}
-              className="text-[15px] sm:text-[17px] md:text-[19px] lg:text-[21px] text-slate-300 font-light max-w-2xl mx-auto leading-relaxed text-balance tracking-tight opacity-90"
+              className="text-[16px] sm:text-[18px] md:text-[19px] lg:text-[21px] text-slate-300 font-light max-w-2xl mx-auto leading-relaxed text-balance tracking-tight opacity-90"
             >
               Contabilidade de alta performance para empresas que <br className="hidden md:block" /> 
               não aceitam nada menos que a excelência estratégica.
@@ -189,16 +206,16 @@ export default function Hero() {
                 transition: { duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.2 } 
               }
             }}
-            className="space-y-6"
+            className="space-y-6 md:space-y-8"
           >
-            <div className="text-white/90 text-lg md:text-2xl font-light">
+            <div className="text-white/90 text-xl md:text-2xl font-light">
               Honorários Mensais a partir de <span className="font-bold text-secondary">R$ 250,00</span>
             </div>
             
-            <div className="flex flex-wrap justify-center gap-4 md:gap-8 text-[12px] md:text-[13px] text-white/60 font-medium tracking-widest uppercase">
+            <div className="flex flex-wrap justify-center gap-3 md:gap-8 text-[11px] md:text-[13px] text-white/70 font-medium tracking-widest uppercase">
               {['Humanizado', 'Ágil', 'Sem Burocracia'].map((item) => (
-                <div key={item} className="flex items-center gap-2">
-                  <div className="w-5 h-5 rounded-full bg-secondary/10 border border-secondary/20 flex items-center justify-center">
+                <div key={item} className="flex items-center gap-2 bg-white/5 md:bg-transparent px-3 py-1.5 md:p-0 rounded-full border border-white/5 md:border-none">
+                  <div className="w-5 h-5 rounded-full bg-secondary/20 flex items-center justify-center">
                     <Check className="w-3 h-3 text-secondary" />
                   </div>
                   <span>{item}</span>
@@ -206,7 +223,7 @@ export default function Hero() {
               ))}
             </div>
 
-            <p className="text-slate-400 text-sm md:text-base font-light italic max-w-xl mx-auto opacity-70">
+            <p className="text-slate-400 text-[13px] md:text-base font-light italic max-w-xl mx-auto opacity-70">
               Ideal para quem quer crescer com segurança e organização desde o início
             </p>
           </motion.div>
