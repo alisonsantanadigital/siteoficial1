@@ -44,7 +44,7 @@ export default function About() {
               >
                 <div className="relative aspect-[16/10] rounded-[2.5rem] overflow-hidden border border-white/10 shadow-2xl bg-slate-800">
                   <Image 
-                    src="/análise-estratégica.jpg?v=2"
+                    src="/analise-estrategica.jpg"
                     alt="Análise de Dados e Inteligência Contábil"
                     fill
                     className="object-cover"

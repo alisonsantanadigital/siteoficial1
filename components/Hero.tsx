@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { MessageCircle, ArrowRight, Menu, X, Check } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { siteConfig } from '@/lib/site-config';
 
 export default function Hero() {
@@ -42,15 +43,20 @@ export default function Hero() {
           <motion.a 
             layout
             href="#" 
-            className="flex items-center transition-all duration-700"
+            className="flex items-center transition-all duration-700 relative"
           >
-            <img 
-              src="/logo-oficial.png?v=2" 
-              alt="OFFICIA ROCHA ASSESSORIA" 
-              className={`w-auto object-contain mix-blend-screen filter brightness-0 invert transition-all duration-700 ${
-                scrolled ? 'h-10 md:h-16' : 'h-20 md:h-48'
-              }`} 
-            />
+            <div className={`relative transition-all duration-700 ${
+                scrolled ? 'h-10 md:h-16 w-32 md:w-48' : 'h-20 md:h-48 w-40 md:w-80'
+              }`}>
+              <Image 
+                src="/logo-oficial.png" 
+                alt="OFFICIA ROCHA ASSESSORIA" 
+                fill
+                priority
+                className="object-contain mix-blend-screen filter brightness-0 invert" 
+                referrerPolicy="no-referrer"
+              />
+            </div>
           </motion.a>
           
           <nav className={`hidden lg:flex items-center transition-all duration-700 ${scrolled ? 'gap-8 text-[12px]' : 'gap-10 text-[13px]'} text-white/70 font-medium tracking-tight`}>
@@ -130,9 +136,13 @@ export default function Hero() {
 
       {/* Background with subtle glow and zoom */}
       <div className="absolute inset-0 z-0">
-        <div 
-          className="absolute inset-0 bg-cover bg-center zoom-bg opacity-50 transition-opacity duration-1000"
-          style={{ backgroundImage: "url('/escritório-do-herói.png?v=2')" }}
+        <Image 
+          src="/escritorio-do-heroi.png"
+          alt="Escritório Officia Rocha"
+          fill
+          priority
+          className="object-cover zoom-bg opacity-50"
+          referrerPolicy="no-referrer"
         />
         <div className="absolute inset-0 bg-hero-overlay z-10" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-glow opacity-40 blur-[120px] pointer-events-none" />

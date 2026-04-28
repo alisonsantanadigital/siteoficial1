@@ -1,6 +1,7 @@
 'use client';
 
 import { ArrowRight, Instagram, Facebook } from 'lucide-react';
+import Image from 'next/image';
 import { siteConfig } from '@/lib/site-config';
 
 export default function Footer() {
@@ -9,11 +10,13 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-6 sm:px-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 md:gap-24 mb-24">
           <div className="lg:col-span-1">
-            <div className="mb-10">
-              <img 
-                src="/logo-oficial.png?v=2" 
+            <div className="mb-10 relative h-28 md:h-56 w-full">
+              <Image 
+                src="/logo-oficial.png" 
                 alt="OFFICIA ROCHA ASSESSORIA" 
-                className="h-28 md:h-56 w-auto object-contain mix-blend-screen filter brightness-0 invert" 
+                fill
+                className="object-contain object-left mix-blend-screen filter brightness-0 invert" 
+                referrerPolicy="no-referrer"
               />
             </div>
             <p className="text-slate-400 leading-relaxed mb-10 font-light text-[15px] md:text-base">
