@@ -55,13 +55,13 @@ export default function LoginPage() {
             </p>
 
             <div className="pt-8">
-              <a 
+              <Link 
                 href="/" 
                 className="inline-flex items-center gap-2 text-white/50 hover:text-white transition-all text-sm font-medium tracking-wide group"
               >
                 <ArrowRight className="w-4 h-4 rotate-180 group-hover:-translate-x-1 transition-transform" />
                 Voltar para o site principal
-              </a>
+              </Link>
             </div>
           </div>
         </div>

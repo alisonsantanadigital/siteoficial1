@@ -245,12 +245,12 @@ export default function Dashboard() {
     <div className="min-h-screen bg-[#F8F9FA] flex font-sans text-slate-900">
       {/* Sidebar */}
       <aside className="w-64 bg-slate-900 text-white flex-col hidden lg:flex border-r border-slate-800">
-        <div className="p-8 border-b border-slate-800 relative h-16 w-full">
+        <div className="p-4 border-b border-slate-800 relative h-20 w-full">
           <Image 
             src="/logo-oficial.png" 
             alt="Logo" 
             fill
-            className="object-contain object-left mix-blend-screen filter brightness-0 invert"
+            className="object-contain object-left px-4 mix-blend-screen filter brightness-0 invert"
             referrerPolicy="no-referrer"
           />
         </div>
