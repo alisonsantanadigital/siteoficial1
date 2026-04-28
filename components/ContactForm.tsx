@@ -28,19 +28,6 @@ export default function ContactForm() {
         createdAt: new Date().toISOString()
       });
 
-      // Prepare WhatsApp Message
-      const whatsappMessage = `*Novo Contato do Site OFFICIA*\n\n` +
-        `*Nome:* ${formData.name}\n` +
-        `*E-mail:* ${formData.email}\n` +
-        `*Empresa:* ${formData.company || 'Não informada'}\n` +
-        `*Mensagem:* ${formData.message}`;
-
-      const encodedMessage = encodeURIComponent(whatsappMessage);
-      const whatsappUrl = `https://wa.me/5511955907718?text=${encodedMessage}`;
-      
-      // Open WhatsApp in a new tab
-      window.open(whatsappUrl, '_blank');
-
       setIsSubmitted(true);
       setFormData({ name: '', email: '', company: '', message: '' });
     } catch (error) {

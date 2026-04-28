@@ -21,8 +21,8 @@ export default function Home() {
       <SectionDivider variant="light" />
       <About />
       
-      {/* About (Dark) & Services (Dark) -> Light Divider */}
-      <SectionDivider variant="light" />
+      {/* About (Dark) & Services (Dark) -> Premium Elegant Divider */}
+      <SectionDivider variant="premium" />
       <Services />
       
       {/* Services (Dark) & Differentials (Light) -> High Contrast Transition, no divider band needed */}

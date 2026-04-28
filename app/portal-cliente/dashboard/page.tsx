@@ -24,10 +24,13 @@ import {
   RefreshCw,
   Unlink,
   ExternalLink,
-  ChevronRight
+  ChevronRight,
+  MailQuestion
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { GoogleGenAI, Type } from "@google/genai";
+import { db, handleFirestoreError, OperationType } from '@/lib/firebase';
+import { collection, query, orderBy, onSnapshot, deleteDoc, doc } from 'firebase/firestore';
 
 // Inicialização da IA Gemini
 const ai = new GoogleGenAI({ apiKey: process.env.NEXT_PUBLIC_GEMINI_API_KEY });
@@ -50,14 +53,24 @@ interface ConnectedDrive {
   connectedAt: string;
 }
 
+interface Lead {
+  id: string;
+  name: string;
+  email: string;
+  company: string;
+  message: string;
+  createdAt: string;
+}
+
 export default function Dashboard() {
   const [clients, setClients] = useState<Client[]>([]);
+  const [leads, setLeads] = useState<Lead[]>([]);
   const [rawData, setRawData] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
-  const [activeTab, setActiveTab] = useState<'clients' | 'drives' | 'settings'>('clients');
+  const [activeTab, setActiveTab] = useState<'clients' | 'leads' | 'drives' | 'settings'>('clients');
   const [connectedDrives, setConnectedDrives] = useState<ConnectedDrive[]>([]);
   const [isConnectingDrive, setIsConnectingDrive] = useState(false);
   const router = useRouter();
@@ -90,6 +103,23 @@ export default function Dashboard() {
       setClients(initial); // eslint-disable-line react-hooks/set-state-in-effect
       localStorage.setItem('portal_clients', JSON.stringify(initial));
     }
+  }, []);
+
+  useEffect(() => {
+    // Escutar por novos leads no Firestore em tempo real
+    const q = query(collection(db, 'leads'), orderBy('createdAt', 'desc'));
+    
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const leadsData: Lead[] = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as Lead[];
+      setLeads(leadsData);
+    }, (error) => {
+      handleFirestoreError(error, OperationType.LIST, 'leads');
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const saveToLocal = (newClients: Client[]) => {
@@ -157,6 +187,16 @@ export default function Dashboard() {
     }
   };
 
+  const deleteLead = async (id: string) => {
+    if (confirm('Deseja excluir esta mensagem?')) {
+      try {
+        await deleteDoc(doc(db, 'leads', id));
+      } catch (error) {
+        handleFirestoreError(error, OperationType.DELETE, `leads/${id}`);
+      }
+    }
+  };
+
   const logout = () => {
     router.push('/portal-cliente');
   };
@@ -219,6 +259,18 @@ export default function Dashboard() {
           >
             <Users className="w-5 h-5 group-hover:scale-110 transition-transform" />
             Gestão de Clientes
+          </button>
+          <button 
+            onClick={() => setActiveTab('leads')}
+            className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-medium transition-all group ${activeTab === 'leads' ? 'bg-secondary text-white' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}
+          >
+            <MailQuestion className="w-5 h-5 group-hover:scale-110 transition-transform" />
+            Novos Leads
+            {leads.length > 0 && (
+              <div className="w-5 h-5 rounded-full bg-secondary-glow text-[10px] flex items-center justify-center ml-auto font-bold animate-pulse">
+                {leads.length}
+              </div>
+            )}
           </button>
           <button 
             onClick={() => setActiveTab('drives')}
@@ -400,6 +452,97 @@ export default function Dashboard() {
                               <div className="space-y-1">
                                 <p className="font-bold text-slate-400">Nenhum cliente encontrado</p>
                                 <p className="text-sm text-slate-300">Tente buscar por outro termo ou cadastre um novo usando a IA acima.</p>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+            </div>
+          ) : activeTab === 'leads' ? (
+            <div className="space-y-8">
+              <section className="bg-white border border-slate-200 rounded-[32px] overflow-hidden shadow-sm">
+                <div className="px-8 py-6 border-b border-slate-200 bg-slate-50/50 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <MailQuestion className="w-5 h-5 text-slate-400" />
+                    <h2 className="text-lg font-bold tracking-tight">Leads do Site</h2>
+                    <span className="bg-slate-200 text-slate-600 text-[10px] font-bold px-2 py-1 rounded-full">{leads.length}</span>
+                  </div>
+                </div>
+
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left">
+                    <thead>
+                      <tr className="border-b border-slate-100 text-[11px] uppercase tracking-widest text-slate-400 font-bold">
+                        <th className="px-8 py-4">Lead / Data</th>
+                        <th className="px-6 py-4">Empresa</th>
+                        <th className="px-6 py-4">E-mail</th>
+                        <th className="px-6 py-4">Mensagem</th>
+                        <th className="px-8 py-4 text-right">Ações</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-50">
+                      {leads.map((lead) => (
+                        <tr key={lead.id} className="hover:bg-slate-50 transition-colors group">
+                          <td className="px-8 py-5">
+                            <div>
+                              <p className="font-bold text-slate-900 text-sm">{lead.name}</p>
+                              <p className="text-[10px] text-slate-400 uppercase tracking-tighter">
+                                {new Date(lead.createdAt).toLocaleString('pt-BR')}
+                              </p>
+                            </div>
+                          </td>
+                          <td className="px-6 py-5">
+                            <span className="text-xs text-slate-600">{lead.company || '—'}</span>
+                          </td>
+                          <td className="px-6 py-5">
+                            <span className="text-xs text-slate-600">{lead.email}</span>
+                          </td>
+                          <td className="px-6 py-5">
+                            <p className="text-xs text-slate-500 max-w-xs truncate" title={lead.message}>
+                              {lead.message}
+                            </p>
+                          </td>
+                          <td className="px-8 py-5 text-right">
+                            <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                              <button 
+                                onClick={() => alert(lead.message)}
+                                className="p-2 hover:bg-white hover:text-secondary rounded-lg text-slate-400 transition-all" 
+                                title="Ver Completa"
+                              >
+                                <Eye className="w-4 h-4" />
+                              </button>
+                              <a 
+                                href={`mailto:${lead.email}`}
+                                className="p-2 hover:bg-white hover:text-primary rounded-lg text-slate-400 transition-all" 
+                                title="Responder"
+                              >
+                                <ChevronRight className="w-4 h-4" />
+                              </a>
+                              <button 
+                                onClick={() => deleteLead(lead.id)}
+                                className="p-2 hover:bg-white hover:text-red-500 rounded-lg text-slate-400 transition-all" 
+                                title="Excluir"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                      {leads.length === 0 && (
+                        <tr>
+                          <td colSpan={5} className="px-8 py-20 text-center">
+                            <div className="flex flex-col items-center gap-4">
+                              <div className="w-16 h-16 rounded-full bg-slate-50 flex items-center justify-center text-slate-200">
+                                <MailQuestion className="w-8 h-8" />
+                              </div>
+                              <div className="space-y-1">
+                                <p className="font-bold text-slate-400">Nenhum lead no momento</p>
+                                <p className="text-sm text-slate-300">As mensagens do site aparecerão aqui assim que forem enviadas.</p>
                               </div>
                             </div>
                           </td>
