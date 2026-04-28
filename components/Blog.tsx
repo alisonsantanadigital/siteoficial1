@@ -2,6 +2,7 @@
 
 import { motion } from 'motion/react';
 import { ArrowRight, Calendar, User, Clock } from 'lucide-react';
+import Image from 'next/image';
 import { siteConfig } from '@/lib/site-config';
 import Link from 'next/link';
 
@@ -82,10 +83,12 @@ export default function Blog() {
                 <div className="relative aspect-[4/3] rounded-[2.5rem] overflow-hidden mb-10 shadow-2xl group-hover:shadow-glow transition-all duration-700 bg-slate-900/50 border border-white/5 p-1.5">
                   <div className="w-full h-full rounded-[2.1rem] overflow-hidden relative">
                     {post.image && (
-                      <img 
+                      <Image 
                         src={post.image} 
                         alt={post.title}
-                        className="w-full h-full object-cover group-hover:scale-105 group-hover:rotate-1 transition-transform duration-1000 ease-out grayscale-[0.2] group-hover:grayscale-0"
+                        fill
+                        className="object-cover group-hover:scale-105 group-hover:rotate-1 transition-transform duration-1000 ease-out grayscale-[0.2] group-hover:grayscale-0"
+                        referrerPolicy="no-referrer"
                       />
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent opacity-60 group-hover:opacity-40 transition-opacity duration-500" />

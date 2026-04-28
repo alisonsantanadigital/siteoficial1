@@ -2,6 +2,7 @@
 
 import { motion } from 'motion/react';
 import { ArrowRight, Calendar, Clock, ChevronLeft } from 'lucide-react';
+import Image from 'next/image';
 import { siteConfig } from '@/lib/site-config';
 import Link from 'next/link';
 import Footer from '@/components/Footer';
@@ -54,10 +55,12 @@ export default function BlogListing() {
                 <Link href={`/blog/${post.slug}`} target="_blank" rel="noopener noreferrer">
                   <div className="relative aspect-[16/10] rounded-[2rem] overflow-hidden mb-8 bg-slate-200 shadow-lg">
                     {post.image && (
-                      <img 
+                      <Image 
                         src={post.image} 
                         alt={post.title}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                        fill
+                        className="object-cover group-hover:scale-110 transition-transform duration-700"
+                        referrerPolicy="no-referrer"
                       />
                     )}
                     <div className="absolute inset-0 bg-primary/20 group-hover:bg-primary/0 transition-colors duration-500" />

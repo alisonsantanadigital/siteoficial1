@@ -2,29 +2,41 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // Helper functions
-    function isAuthenticated() {
-      return request.auth != null;
-    }
-    
-    function isValidEmail(email) {
-      return email is string && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    // 0. Default Deny
+    match /{document=**} {
+      allow read, write: if false;
     }
 
-    // Leads collection: Anyone can create, only admins can read
+    // Phase 3: Primitives & Unified Helpers
+    function isSignedIn() { return request.auth != null; }
+    function isAdmin() { return isSignedIn(); } // Simplified for now
+    function incoming() { return request.resource.data; }
+    function existing() { return resource.data; }
+    function isValidId(id) { return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); }
+    function isValidEmail(email) { return email is string && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"); }
+
+    // Pillar 2: Validation Blueprints
+    function isValidLead(data) {
+      return data.keys().hasAll(['name', 'email', 'message', 'createdAt']) &&
+             data.name is string && data.name.size() > 0 && data.name.size() <= 200 &&
+             isValidEmail(data.email) &&
+             data.message is string && data.message.size() > 0 && data.message.size() <= 2000 &&
+             data.createdAt is string;
+    }
+
+    // Leads collection: Anyone can create, only admins (owner) can read/delete
     match /leads/{leadId} {
-      allow create: if 
-        request.resource.data.name is string && request.resource.data.name.size() > 0 &&
-        isValidEmail(request.resource.data.email) &&
-        request.resource.data.message is string && request.resource.data.message.size() > 0 &&
-        request.resource.data.createdAt is string;
-      allow read: if isAuthenticated(); // Simplified for now, can be hardened with admin roles
+      allow create: if isValidLead(incoming());
+      allow list: if isAdmin();
+      allow get: if isAdmin();
+      allow delete: if isAdmin();
+      allow update: if false; // Contacts are immutable
     }
 
     // Posts collection: Anyone can read, only admins can write
     match /posts/{postId} {
       allow read: if true;
-      allow write: if isAuthenticated();
+      allow write: if isAdmin();
     }
   }
 }

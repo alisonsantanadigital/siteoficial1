@@ -2,6 +2,7 @@
 
 import { motion } from 'motion/react';
 import { ArrowLeft, Calendar, User, Clock, Share2 } from 'lucide-react';
+import Image from 'next/image';
 import { siteConfig } from '@/lib/site-config';
 import Link from 'next/link';
 import { useParams, notFound } from 'next/navigation';
@@ -59,10 +60,13 @@ export default function BlogPostPage() {
 
             {post.image && (
               <div className="relative aspect-video rounded-[2.5rem] overflow-hidden mb-12 shadow-2xl border border-slate-100">
-                <img 
+                <Image 
                   src={post.image} 
                   alt={post.title}
-                  className="w-full h-full object-cover"
+                  fill
+                  priority
+                  className="object-cover"
+                  referrerPolicy="no-referrer"
                 />
               </div>
             )}

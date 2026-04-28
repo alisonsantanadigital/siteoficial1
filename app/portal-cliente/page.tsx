@@ -21,11 +21,14 @@ export default function LoginPage() {
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         className="relative z-10 w-full max-w-2xl"
       >
-        <div className="flex justify-center mb-12">
-          <img 
-            src="/logo-oficial.png?v=2" 
+        <div className="flex justify-center mb-12 relative h-32 md:h-48 w-full">
+          <Image 
+            src="/logo-oficial.png" 
             alt="OFFICIA ROCHA ASSESSORIA" 
-            className="h-32 md:h-48 w-auto object-contain mix-blend-screen filter brightness-0 invert" 
+            fill
+            priority
+            className="object-contain mix-blend-screen filter brightness-0 invert" 
+            referrerPolicy="no-referrer"
           />
         </div>
 
