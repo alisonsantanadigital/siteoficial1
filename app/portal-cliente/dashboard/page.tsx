@@ -28,6 +28,7 @@ import {
   MailQuestion
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { GoogleGenAI, Type } from "@google/genai";
 import { db, handleFirestoreError, OperationType } from '@/lib/firebase';
 import { collection, query, orderBy, onSnapshot, deleteDoc, doc } from 'firebase/firestore';
@@ -244,11 +245,13 @@ export default function Dashboard() {
     <div className="min-h-screen bg-[#F8F9FA] flex font-sans text-slate-900">
       {/* Sidebar */}
       <aside className="w-64 bg-slate-900 text-white flex-col hidden lg:flex border-r border-slate-800">
-        <div className="p-8 border-b border-slate-800">
-          <img 
-            src="/logo-oficial.png?v=2" 
+        <div className="p-8 border-b border-slate-800 relative h-16 w-full">
+          <Image 
+            src="/logo-oficial.png" 
             alt="Logo" 
-            className="h-10 w-auto object-contain mix-blend-screen filter brightness-0 invert"
+            fill
+            className="object-contain object-left mix-blend-screen filter brightness-0 invert"
+            referrerPolicy="no-referrer"
           />
         </div>
         
